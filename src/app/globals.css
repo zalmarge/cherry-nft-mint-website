@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  margin: 0;
+  padding: 0;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+:root,
+.light,
+.light-theme {
+  --blue-1: #fcfdfe;
+  --blue-2: #f6f9ff;
+  --blue-3: #ebf2ff;
+  --blue-4: #ddeaff;
+  --blue-5: #cddfff;
+  --blue-6: #b7d1ff;
+  --blue-7: #9dbeff;
+  --blue-8: #7ba4ff;
+  --blue-9: #2351f8;
+  --blue-10: #1f48d8;
+  --blue-11: #2753e3;
+  --blue-12: #152b68;
+
+  --blue-a1: #0055aa03;
+  --blue-a2: #0055ff09;
+  --blue-a3: #005aff14;
+  --blue-a4: #0062ff22;
+  --blue-a5: #005cff32;
+  --blue-a6: #005dff48;
+  --blue-a7: #0056ff62;
+  --blue-a8: #0050ff84;
+  --blue-a9: #0035f7dc;
+  --blue-a10: #002fd3e0;
+  --blue-a11: #0034ded8;
+  --blue-a12: #00185aea;
+
+  --blue-contrast: #fff;
+  --blue-surface: #f4f8ffcc;
+  --blue-indicator: #2351f8;
+  --blue-track: #2351f8;
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+  @media (color-gamut: p3) {
+    :root,
+    .light,
+    .light-theme {
+      --blue-1: oklch(99.4% 0.002 265.4);
+      --blue-2: oklch(98.3% 0.01 265.4);
+      --blue-3: oklch(96.1% 0.022 265.4);
+      --blue-4: oklch(93.5% 0.044 265.4);
+      --blue-5: oklch(90.3% 0.066 265.4);
+      --blue-6: oklch(86.3% 0.092 265.4);
+      --blue-7: oklch(80.7% 0.112 265.4);
+      --blue-8: oklch(73% 0.146 265.4);
+      --blue-9: oklch(52.5% 0.252 265.4);
+      --blue-10: oklch(47.7% 0.223 265.4);
+      --blue-11: oklch(51% 0.223 265.4);
+      --blue-12: oklch(31.3% 0.111 265.4);
+
+      --blue-a1: color(display-p3 0.024 0.349 0.675 / 0.012);
+      --blue-a2: color(display-p3 0.02 0.267 0.878 / 0.032);
+      --blue-a3: color(display-p3 0.008 0.322 0.949 / 0.075);
+      --blue-a4: color(display-p3 0.008 0.349 0.941 / 0.126);
+      --blue-a5: color(display-p3 0.004 0.302 0.937 / 0.185);
+      --blue-a6: color(display-p3 0.004 0.302 0.941 / 0.263);
+      --blue-a7: color(display-p3 0.004 0.286 0.949 / 0.361);
+      --blue-a8: color(display-p3 0.004 0.259 0.945 / 0.487);
+      --blue-a9: color(display-p3 0 0.161 0.922 / 0.816);
+      --blue-a10: color(display-p3 0 0.137 0.78 / 0.836);
+      --blue-a11: color(display-p3 0 0.157 0.824 / 0.804);
+      --blue-a12: color(display-p3 0 0.071 0.322 / 0.899);
+
+      --blue-contrast: #fff;
+      --blue-surface: color(display-p3 0.961 0.973 1 / 0.8);
+      --blue-indicator: oklch(52.5% 0.252 265.4);
+      --blue-track: oklch(52.5% 0.252 265.4);
+    }
+  }
+}
+
+.radix-themes {
+  --default-font-family: var(--font-open-sans);
+  background-color: #fffdff;
+}
+
+.ToastViewport {
+  --viewport-padding: 25px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--viewport-padding);
+  gap: 10px;
+  width: 390px;
+  max-width: 100vw;
+  margin: 0;
+  list-style: none;
+  z-index: 2147483647;
+  outline: none;
+}
+
+.ToastRoot {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  padding: 15px;
+  display: grid;
+  grid-template-areas: "title action" "description action";
+  grid-template-columns: auto max-content;
+  column-gap: 15px;
+  align-items: center;
+}
+.ToastRoot[data-state="open"] {
+  animation: slideIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ToastRoot[data-state="closed"] {
+  animation: hide 100ms ease-in;
+}
+.ToastRoot[data-swipe="move"] {
+  transform: translateX(var(--radix-toast-swipe-move-x));
+}
+.ToastRoot[data-swipe="cancel"] {
+  transform: translateX(0);
+  transition: transform 200ms ease-out;
+}
+.ToastRoot[data-swipe="end"] {
+  animation: swipeOut 100ms ease-out;
+}
+
+@keyframes hide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(calc(100% + var(--viewport-padding)));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes swipeOut {
+  from {
+    transform: translateX(var(--radix-toast-swipe-end-x));
+  }
+  to {
+    transform: translateX(calc(100% + var(--viewport-padding)));
+  }
+}
+
+.ToastTitle {
+  grid-area: title;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: var(--slate-12);
+  font-size: 15px;
+}
+
+.ToastDescription {
+  grid-area: description;
+  margin: 0;
+  color: var(--slate-11);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.ToastAction {
+  grid-area: action;
+}
+
+.wallet-adapter-button-start-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.wallet-adapter-dropdown {
+  width: inherit;
+}
