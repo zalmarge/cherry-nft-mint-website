@@ -47,6 +47,37 @@ const imagePlaceholders = [
   "EmeraldCoin.png",
 ];
 
+const ServerActionButton = ({
+  icon,
+  onClick,
+  tooltip,
+  extraStyles,
+}: {
+  icon: React.ReactNode;
+  onClick: () => void;
+  tooltip: string;
+  extraStyles?: string;
+}) => {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Flex
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={clsx(
+        `absolute top-5 right-5 justify-end p-1 bg-blue-100 rounded-2xl cursor-pointer
+          hover:bg-green-100 ${extraStyles}
+        `
+      )}
+      onClick={onClick}
+    >
+      {icon}
+      {hovered && (
+        <Text className="text-sm absolute top-[-20px] right-0">{tooltip}</Text>
+      )}
+    </Flex>
+  );
+};
+
 interface Props {
   id: number;
   lastPrice: number;
@@ -90,7 +121,6 @@ const ServerCard: React.FC<Props> = ({
         action: "stake",
       }),
     });
-    console.log(response);
     window.location.reload();
   };
 
@@ -174,45 +204,34 @@ const ServerCard: React.FC<Props> = ({
       onMouseLeave={() => setHovered(false)}
     >
       {wallet && nft.ownedByUser && (
-        <>
-          <Flex
-            className={`absolute top-5 right-16 justify-end p-1 bg-blue-100 rounded-2xl cursor-pointer ${
-              hoveredAdded ? "bg-rose-100" : ""
-            } ${!hoveredAdded && isAddedToCart ? "bg-green-100" : ""}`}
+        <div className="flex">
+          <ServerActionButton
+            icon={<ListIcon />}
             onClick={handleListNFT}
-          >
-            <ListIcon></ListIcon>
-          </Flex>
-          <Flex
-            className={`absolute top-5 right-5 justify-end p-1 bg-blue-100 rounded-2xl cursor-pointer ${
-              hoveredAdded ? "bg-rose-100" : ""
-            } ${!hoveredAdded && isAddedToCart ? "bg-green-100" : ""}`}
+            tooltip="List for sale"
+            extraStyles="right-14"
+          />
+          <ServerActionButton
+            icon={<ArrowDownIcon />}
             onClick={handleStakeNFT}
-          >
-            <ArrowDownIcon />
-          </Flex>
-        </>
+            tooltip="Stake"
+          />
+        </div>
       )}
       {wallet && nft.listedByUser && (
-        <Flex
-          className={`absolute top-5 right-5 justify-end p-1 bg-blue-100 rounded-2xl cursor-pointer ${
-            hoveredAdded ? "bg-rose-100" : ""
-          } ${!hoveredAdded && isAddedToCart ? "bg-green-100" : ""}`}
+        <ServerActionButton
+          icon={<XIcon />}
           onClick={handleDelistNFT}
-        >
-          <XIcon></XIcon>
-        </Flex>
+          tooltip="Delist"
+        />
       )}
 
       {wallet && nft.stakedByUser && (
-        <Flex
-          className={`absolute top-5 right-5 justify-end p-1 bg-blue-100 rounded-2xl cursor-pointer ${
-            hoveredAdded ? "bg-rose-100" : ""
-          } ${!hoveredAdded && isAddedToCart ? "bg-green-100" : ""}`}
+        <ServerActionButton
+          icon={<ArrowUpIcon />}
           onClick={handleUnstakeNFT}
-        >
-          <ArrowUpIcon />
-        </Flex>
+          tooltip="Unstake"
+        />
       )}
       <Image
         // src={listing.content.links.image}
@@ -244,7 +263,7 @@ const ServerCard: React.FC<Props> = ({
               ))}
             </Flex>
           )}
-          <div className="flex justify-between w-full">
+          <div className="flex justify-between w-full relative">
             <Flex className="flex justify-center items-center gap-2">
               <Badge>#{id}</Badge>
               <Text className="font-semibold">
@@ -252,14 +271,12 @@ const ServerCard: React.FC<Props> = ({
               </Text>
             </Flex>
             {nft.listed && !nft.listedByUser && (
-              <Flex
-                className={`justify-end p-1 bg-blue-100 rounded-2xl cursor-pointer ${
-                  hoveredAdded ? "bg-rose-100" : ""
-                } ${!hoveredAdded && isAddedToCart ? "bg-green-100" : ""}`}
+              <ServerActionButton
+                icon={<DollarSignIcon />}
                 onClick={handlePurchaseNFT}
-              >
-                <DollarSignIcon color="var(--blue-9)" size={"18px"} />
-              </Flex>
+                tooltip="Buy"
+                extraStyles="top-[-4px] right-[0px]"
+              />
             )}
           </div>
         </div>

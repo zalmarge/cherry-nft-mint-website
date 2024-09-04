@@ -74,7 +74,6 @@ const getMetadata = async (mint: anchor.web3.PublicKey): Promise<anchor.web3.Pub
     ComputeBudgetProgram.setComputeUnitLimit({
       units: 400000,
     });
-    console.log("price", price);
     const ix = await program.methods.mintNft(price).accounts({
       user: provider.wallet.publicKey,
       mint: mint.publicKey,

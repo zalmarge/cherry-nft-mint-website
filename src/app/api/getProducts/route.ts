@@ -12,7 +12,6 @@ export async function GET() {
     }
   );
   const tokendata = await tokenData.json();
-  console.log(tokendata);
   const productData = await fetch(
     "http://cherry-nft.cloud.cherryservers.net/v1.0/products",
     {

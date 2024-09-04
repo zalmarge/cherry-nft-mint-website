@@ -6,11 +6,9 @@ export async function POST(request: Request) {
   const data = await request.json();
   const product: ConfigType = data.product;
   const wallet = data.wallet;
-  console.log("product", product);
   // Fetch data from external API
 //   return NextResponse.json({ data:"test" });
 const ram = product.ramOptions[0].name;
-console.log("pk", data.publicKey)
 const osDisk = product.osDiskOptions.map((option => option.name));
 const dataDisk = product.dataDiskOptions.map((option => option.name));
 const body = {
@@ -51,7 +49,6 @@ setTimeout(async () => {
       }
     );
     const tokenResponse: any = await tokenData.json();
-    console.log("token response", tokenResponse);
   }, 2000);
   return NextResponse.json({ response });
 }

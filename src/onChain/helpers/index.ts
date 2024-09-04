@@ -16,15 +16,9 @@ export const getNFTsForOwnerByCollection = async (owner: String, collection: Str
 
     const { result } = await response.data;
     const nfts = [];
-    console.log(result);
 
     for (const results of result.items) {
       if (results.grouping[0] != null && results.grouping[0].group_key == 'collection' && results.grouping[0].group_value == collection) {
-        console.log("\nFound Collection!");
-        console.log("\nNFT Address: ", results.id);
-        console.log("\nNFT URI: ", results.content.json_uri);
-        console.log("\nNFT Metadata: \nSymbol: ", results.content.metadata.symbol, "\nAttributes: ", results.content.metadata.attributes);
-        console.log("\nNFT Image: ", results.content.links.image);
         nfts.push(results);
       }
     }
@@ -45,16 +39,6 @@ export const getNFTsForOwnerByCollection = async (owner: String, collection: Str
     });
 
     const { result } = await response.data;
-    console.log(result);
 
-    // for (const results of result.items) {
-    //   if (results.grouping[0] != null && results.grouping[0].group_key == 'collection' && results.grouping[0].group_value == collection) {
-    //     console.log("\nFound Collection!");
-    //     console.log("\nNFT Address: ", results.id);
-    //     console.log("\nNFT URI: ", results.content.json_uri);
-    //     console.log("\nNFT Metadata: \nSymbol: ", results.content.metadata.symbol, "\nAttributes: ", results.content.metadata.attributes);
-    //     console.log("\nNFT Image: ", results.content.links.image);
-    //   }
-    // }
     return result.items;
   };

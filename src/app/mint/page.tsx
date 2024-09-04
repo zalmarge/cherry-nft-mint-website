@@ -63,7 +63,6 @@ const Mint = () => {
     diskId: number,
     selectedValue: string
   ) => {
-    console.log("config", config);
     const newOption = currentTierOptions.disk_options[os ? "os" : "data"].find(
       (disk) => disk.name === selectedValue
     );
@@ -105,15 +104,12 @@ const Mint = () => {
     });
   };
 
-  console.log(config);
-
   const handleBuyNFT = async (price: number) => {
     const { signature, mint } = await mintNFT(
       price,
       wallet.adapter as unknown as NodeWallet,
       connection
     );
-    console.log(signature, mint);
     const sendProductOrder = async () => {
       const response = await fetch("/api/sendProductOrder", {
         method: "POST",
@@ -124,7 +120,6 @@ const Mint = () => {
           wallet: publicKey?.toBase58(),
         }),
       });
-      console.log(response);
     };
     sendProductOrder();
   };
@@ -132,9 +127,7 @@ const Mint = () => {
   useEffect(() => {
     const fetchProductData = async () => {
       const productData = await fetch("/api/getProducts");
-      console.log("productData", productData);
       const data: ItemType[] = (await productData.json()).productData;
-      console.log("productData", data);
 
       const newData = data.map((product: ItemType) => {
         return {
@@ -157,7 +150,6 @@ const Mint = () => {
             : 1
           : 0;
       const currProduct = newData[0];
-      console.log("currProduct", currProduct);
       setCurrentTierOptions(currProduct);
       setConfig((prev) => ({
         ...prev,
@@ -403,9 +395,7 @@ const Mint = () => {
                       <CustomRadioCard
                         key={index}
                         isSelected={true}
-                        onClick={() => {
-                          console.log("clicked");
-                        }}
+                        onClick={() => {}}
                       >
                         <Flex className="w-[240px] max-w-[240px]">
                           <CustomCard
@@ -433,9 +423,7 @@ const Mint = () => {
                       <CustomRadioCard
                         key={index}
                         isSelected={true}
-                        onClick={() => {
-                          console.log("clicked");
-                        }}
+                        onClick={() => {}}
                       >
                         <Flex className="w-[240px] max-w-[240px]">
                           <CustomCard
@@ -463,9 +451,7 @@ const Mint = () => {
                       <CustomRadioCard
                         key={index}
                         isSelected={true}
-                        onClick={() => {
-                          console.log("clicked");
-                        }}
+                        onClick={() => {}}
                       >
                         <Flex className="w-[240px] max-w-[240px]">
                           <CustomCard

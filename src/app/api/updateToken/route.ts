@@ -21,7 +21,6 @@ export async function POST(request: Request) {
       }
     );
     const response: any = await tokenData.json();
-    console.log("token response", response);
   return NextResponse.json({ response });
 }
 
