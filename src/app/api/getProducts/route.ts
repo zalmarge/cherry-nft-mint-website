@@ -2,16 +2,7 @@ import { DiskType, ItemType } from '@/types';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  // Fetch data from external API
-  const tokenData = await fetch(
-    "http://cherry-nft.cloud.cherryservers.net/v1.0/tokens",
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
-      },
-    }
-  );
-  const tokendata = await tokenData.json();
+
   const productData = await fetch(
     "http://cherry-nft.cloud.cherryservers.net/v1.0/products",
     {
@@ -20,9 +11,10 @@ export async function GET() {
       },
     }
   );
-  const tdata = await productData.text();
-  const truncated = tdata.split("false}]}}]")[0] + "false}]}}]";
-  const data = JSON.parse(truncated);
+  // const tdata = await productData.text();
+  // console.log(tdata);
+  // const truncated = tdata.split("false}]}}]")[0] + "false}]}}]";
+  const data = await productData.json();
 
   const newData = data.map((product: ItemType) => {
     return {
