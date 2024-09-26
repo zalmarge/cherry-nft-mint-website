@@ -20,7 +20,7 @@ const body = {
 }
 
   const productData = await fetch(
-    "http://cherry-nft.cloud.cherryservers.net/v1.0/orders",
+    `${process.env.NEXT_CHERRY_SERVER_URI}/v1.0/orders`,
     {
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
@@ -34,7 +34,7 @@ const body = {
   const response: any = await productData.json();
 setTimeout(async () => {
     const tokenData = await fetch(
-      `http://cherry-nft.cloud.cherryservers.net/v1.0/tokens/${data.publicKey}`,
+      `${process.env.NEXT_CHERRY_SERVER_URI}/v1.0/tokens/${data.publicKey}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,

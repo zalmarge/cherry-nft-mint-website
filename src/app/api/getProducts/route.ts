@@ -4,17 +4,18 @@ import { NextResponse } from 'next/server';
 export async function GET() {
 
   const productData = await fetch(
-    "http://cherry-nft.cloud.cherryservers.net/v1.0/products",
+    `${process.env.NEXT_CHERRY_SERVER_URI}/v1.0/products`,
     {
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
       },
     }
   );
-  // const tdata = await productData.text();
-  // console.log(tdata);
-  // const truncated = tdata.split("false}]}}]")[0] + "false}]}}]";
-  const data = await productData.json();
+  const tdata = await productData.text();
+  console.log(tdata);
+  const truncated = tdata.split("false}]}}]")[0] + "false}]}}]";
+  const data = JSON.parse(truncated);
+  // const data = await productData.json();
 
   const newData = data.map((product: ItemType) => {
     return {

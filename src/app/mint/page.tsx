@@ -505,6 +505,11 @@ const Mint = () => {
               </Text>
             </Flex>
           </Flex>
+          {!publicKey && (
+            <div className="text-red text-xl flex justify-center">
+              Please connect your wallet
+            </div>
+          )}
           <Button
             className="mt-2 h-9"
             onClick={() => {

@@ -20,62 +20,85 @@ export default function Home() {
 
   useEffect(() => {
     const fetchAll = async () => {
-      const myNFTs = await getNFTsForOwnerByCollection(
-        wallet.adapter.publicKey.toString(),
-        COLLECTION_ADDRESS
-      );
-      const myNFTIDs = myNFTs.map((nft) => nft.id);
-
       const allNFTs = await getNFTsByCollection(COLLECTION_ADDRESS);
-      const listedNFTs = await getNFTListings(
-        wallet.adapter as unknown as NodeWallet,
-        connection
-      );
+      const listedNFTs = await getNFTListings(null, connection);
 
       const listedIDs = listedNFTs.map((listing) =>
         listing.account.mint.toString()
       );
-      const stakedNFTs = await getNFTStakings(
-        wallet.adapter as unknown as NodeWallet,
-        connection
-      );
+      const stakedNFTs = await getNFTStakings(null, connection);
       const stakedIDs = stakedNFTs.map((stake) =>
         stake.account.mint.toString()
       );
-      const nftsWithListings = allNFTs.map((nft) => ({
-        ...nft,
-        listed: listedIDs.includes(nft.id),
-        staked: stakedIDs.includes(nft.id),
-        price:
-          listedNFTs
-            .find((listing) => listing.account.mint.toString() === nft.id)
-            ?.account.price.toNumber() /
-          10 ** 9,
-        ownedByUser: myNFTIDs.includes(nft.id),
-        stakedByUser:
-          stakedIDs.includes(nft.id) &&
-          stakedNFTs
-            .find((stake) => stake.account.mint.toString() === nft.id)
-            ?.account.owner.toString() === wallet.adapter.publicKey.toString(),
-        listedByUser:
-          listedIDs.includes(nft.id) &&
-          listedNFTs
-            .find((listing) => listing.account.mint.toString() === nft.id)
-            ?.account.owner.toString() === wallet.adapter.publicKey.toString(),
-        listingAccount:
-          listedIDs.includes(nft.id) &&
-          listedNFTs.find(
-            (listing) => listing.account.mint.toString() === nft.id
-          )?.account.owner,
-        stakingAccount:
-          stakedIDs.includes(nft.id) &&
-          stakedNFTs.find((stake) => stake.account.mint.toString() === nft.id)
-            ?.account.owner,
-      }));
 
-      setNfts(nftsWithListings);
+      if (wallet?.adapter?.publicKey) {
+        const myNFTs = await getNFTsForOwnerByCollection(
+          wallet.adapter.publicKey.toString(),
+          COLLECTION_ADDRESS
+        );
+        const myNFTIDs = myNFTs.map((nft) => nft.id);
+        const nftsWithListings = allNFTs.map((nft) => ({
+          ...nft,
+          listed: listedIDs.includes(nft.id),
+          staked: stakedIDs.includes(nft.id),
+          price:
+            listedNFTs
+              .find((listing) => listing.account.mint.toString() === nft.id)
+              ?.account.price.toNumber() /
+            10 ** 9,
+          ownedByUser: myNFTIDs.includes(nft.id),
+          stakedByUser:
+            stakedIDs.includes(nft.id) &&
+            stakedNFTs
+              .find((stake) => stake.account.mint.toString() === nft.id)
+              ?.account.owner.toString() ===
+              wallet.adapter.publicKey.toString(),
+          listedByUser:
+            listedIDs.includes(nft.id) &&
+            listedNFTs
+              .find((listing) => listing.account.mint.toString() === nft.id)
+              ?.account.owner.toString() ===
+              wallet.adapter.publicKey.toString(),
+          listingAccount:
+            listedIDs.includes(nft.id) &&
+            listedNFTs.find(
+              (listing) => listing.account.mint.toString() === nft.id
+            )?.account.owner,
+          stakingAccount:
+            stakedIDs.includes(nft.id) &&
+            stakedNFTs.find((stake) => stake.account.mint.toString() === nft.id)
+              ?.account.owner,
+        }));
+
+        setNfts(nftsWithListings);
+      } else {
+        const nftsWithListings = allNFTs.map((nft) => ({
+          ...nft,
+          listed: listedIDs.includes(nft.id),
+          staked: stakedIDs.includes(nft.id),
+          price:
+            listedNFTs
+              .find((listing) => listing.account.mint.toString() === nft.id)
+              ?.account.price.toNumber() /
+            10 ** 9,
+          ownedByUser: false,
+          stakedByUser: false,
+          listedByUser: false,
+          listingAccount:
+            listedIDs.includes(nft.id) &&
+            listedNFTs.find(
+              (listing) => listing.account.mint.toString() === nft.id
+            )?.account.owner,
+          stakingAccount:
+            stakedIDs.includes(nft.id) &&
+            stakedNFTs.find((stake) => stake.account.mint.toString() === nft.id)
+              ?.account.owner,
+        }));
+
+        setNfts(nftsWithListings);
+      }
     };
-    if (wallet && wallet.adapter.publicKey) fetchAll();
+    fetchAll();
   }, [wallet, wallet?.adapter?.publicKey]);
 
   return (
