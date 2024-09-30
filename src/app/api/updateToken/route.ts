@@ -1,4 +1,5 @@
 
+import { getToken } from '@/utils/getToken';
 import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   const data = await request.json();
@@ -9,7 +10,7 @@ export async function POST(request: Request) {
       `http://cherry-nft.cloud.cherryservers.net/v1.0/tokens/${data.publicKey}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+          Authorization: `Bearer ${getToken()}`,
           "Content-Type": "application/json",
         },
 

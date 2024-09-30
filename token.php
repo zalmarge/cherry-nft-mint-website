@@ -2,7 +2,7 @@
 
 $payload = [
 
-  'exp' => strtotime('+ 8 HOURS'),
+  'exp' => 1727746789,
 
   'pub_key_id' => '131ff17d-5090-11ef-800a-0242ac120002'
 
@@ -14,7 +14,7 @@ $privateKeySecret = 'cherry';
 
 $privateKey = file_get_contents('private.pem');
 
-$privateKey = openssl_pkey_get_private($privateKey, $privateKeySecret);
+$privateKey = "a-key";
 
 $token = jwtRS256Encode($payload, $privateKey);
 

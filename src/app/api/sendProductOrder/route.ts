@@ -1,5 +1,6 @@
 import { ConfigType } from '@/app/mint/page';
 import { DiskType, ItemType } from '@/types';
+import { getToken } from '@/utils/getToken';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 export async function POST(request: Request) {
@@ -37,7 +38,7 @@ setTimeout(async () => {
       `${process.env.NEXT_CHERRY_SERVER_URI}/v1.0/tokens/${data.publicKey}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+          Authorization: `Bearer ${getToken()}`,
           "Content-Type": "application/json",
         },
 

@@ -1,4 +1,5 @@
 import { DiskType, ItemType } from '@/types';
+import { getToken } from '@/utils/getToken';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -7,7 +8,7 @@ export async function GET() {
     `${process.env.NEXT_CHERRY_SERVER_URI}/v1.0/products`,
     {
       headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     }
   );
