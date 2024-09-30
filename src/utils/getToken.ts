@@ -17,7 +17,7 @@ function decryptPrivateKey(encryptedKey: string, password: string): string {
 export function getToken(): string {
     const payload: Payload = {
         exp: Math.floor(Date.now() / 1000) + 3600,
-        pub_key_id: '131ff17d-5090-11ef-800a-0242ac120002'
+        pub_key_id: process.env.NEXT_PUBLIC_PUBKEY_ID
     };
 
     const header = {
