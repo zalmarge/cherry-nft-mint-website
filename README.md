@@ -14,6 +14,37 @@ pnpm dev
 bun dev
 ```
 
+Or if you are using Docker:
+
+```bash
+docker compose run --rm app npm install
+docker compose up
+```
+
+In case of Docker you'd probably also want to create an override file:
+
+```bash
+cat > compose.override.yml <<EOF
+services:
+  app:
+    ports:
+    - 127.0.0.1:3000:3000
+
+    # Only if you hate present working dir being
+    # littered by files owned by root
+    user: "$(id -u):$(id -g)"
+    volumes:
+    - type: bind
+      source: /etc/passwd
+      target: /etc/passwd
+      read_only: true
+    - type: bind
+      source: /etc/group
+      target: /etc/group
+      read_only: true
+EOF
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
