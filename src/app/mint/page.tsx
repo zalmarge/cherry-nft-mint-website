@@ -513,9 +513,19 @@ const Mint = () => {
           <Button
             className="mt-2 h-9"
             onClick={() => {
-              handleBuyNFT(mintCost);
+              if (
+                publicKey &&
+                mintCost > 0 &&
+                parseInt(currentTierOptions.available_qty) > 0
+              ) {
+                handleBuyNFT(mintCost);
+              }
             }}
-            disabled={mintCost === 0 || !publicKey}
+            disabled={
+              mintCost === 0 ||
+              !publicKey ||
+              currentTierOptions.available_qty === "0"
+            }
           >
             Mint
           </Button>

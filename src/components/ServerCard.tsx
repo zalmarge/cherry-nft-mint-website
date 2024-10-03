@@ -64,7 +64,7 @@ const ServerActionButton = ({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={clsx(
-        `absolute top-5 right-5 justify-end p-1 bg-blue-100 rounded-2xl cursor-pointer
+        ` p-1 bg-blue-100 rounded-2xl cursor-pointer
           hover:bg-green-100 ${extraStyles}
         `
       )}
@@ -209,12 +209,13 @@ const ServerCard: React.FC<Props> = ({
             icon={<ListIcon />}
             onClick={handleListNFT}
             tooltip="List for sale"
-            extraStyles="right-14"
+            extraStyles="absolute top-5 justify-end right-14"
           />
           <ServerActionButton
             icon={<ArrowDownIcon />}
             onClick={handleStakeNFT}
             tooltip="Stake"
+            extraStyles="absolute top-5 right-5 justify-end"
           />
         </div>
       )}
@@ -223,6 +224,7 @@ const ServerCard: React.FC<Props> = ({
           icon={<XIcon />}
           onClick={handleDelistNFT}
           tooltip="Delist"
+          extraStyles="absolute top-5 right-5 justify-end"
         />
       )}
 
@@ -231,6 +233,7 @@ const ServerCard: React.FC<Props> = ({
           icon={<ArrowUpIcon />}
           onClick={handleUnstakeNFT}
           tooltip="Unstake"
+          extraStyles="absolute top-5 right-5 justify-end"
         />
       )}
       <Image
@@ -300,7 +303,9 @@ const ServerItem: React.FC<Props> = ({
 }) => {
   const [hovered, setHovered] = useState(false);
   const [hoveredAdded, setHoveredAdded] = useState(false);
-  const { publicKey } = useWallet();
+
+  const { wallet, publicKey } = useWallet();
+  const { connection } = useConnection();
 
   const randomImage =
     imagePlaceholders[Math.floor(Math.random() * imagePlaceholders.length)];
@@ -332,6 +337,91 @@ const ServerItem: React.FC<Props> = ({
       toast("Added");
     }
   };
+  const handleStakeNFT = async () => {
+    await stakeNFT(
+      wallet.adapter as unknown as NodeWallet,
+      connection,
+      new PublicKey(nft.id)
+    );
+    const response = await fetch("/api/updateToken", {
+      method: "POST",
+      body: JSON.stringify({
+        publicKey: nft.id,
+        wallet: publicKey?.toBase58(),
+        action: "stake",
+      }),
+    });
+    window.location.reload();
+  };
+
+  const handleUnstakeNFT = async () => {
+    await unstakeNFT(
+      wallet.adapter as unknown as NodeWallet,
+      connection,
+      new PublicKey(nft.id)
+    );
+    const response = await fetch("/api/updateToken", {
+      method: "POST",
+      body: JSON.stringify({
+        publicKey: nft.id,
+        wallet: publicKey?.toBase58(),
+        action: "unstake",
+      }),
+    });
+    window.location.reload();
+  };
+
+  const handleListNFT = async () => {
+    await listNFT(
+      wallet.adapter as unknown as NodeWallet,
+      connection,
+      new PublicKey(nft.id)
+    );
+    const response = await fetch("/api/updateToken", {
+      method: "POST",
+      body: JSON.stringify({
+        publicKey: nft.id,
+        wallet: publicKey?.toBase58(),
+        action: "list",
+      }),
+    });
+    window.location.reload();
+  };
+
+  const handleDelistNFT = async () => {
+    await delistNFT(
+      wallet.adapter as unknown as NodeWallet,
+      connection,
+      new PublicKey(nft.id)
+    );
+    const response = await fetch("/api/updateToken", {
+      method: "POST",
+      body: JSON.stringify({
+        publicKey: nft.id,
+        wallet: publicKey?.toBase58(),
+        action: "delist",
+      }),
+    });
+    window.location.reload();
+  };
+
+  const handlePurchaseNFT = async () => {
+    await purchaseNFT(
+      wallet.adapter as unknown as NodeWallet,
+      connection,
+      new PublicKey(nft.id),
+      nft.listingAccount
+    );
+    const response = await fetch("/api/updateToken", {
+      method: "POST",
+      body: JSON.stringify({
+        publicKey: nft.id,
+        wallet: publicKey?.toBase58(),
+        action: "buy",
+      }),
+    });
+    window.location.reload();
+  };
 
   return (
     <Table.Row
@@ -341,27 +431,6 @@ const ServerItem: React.FC<Props> = ({
     >
       <Table.Cell className="p-0 pl-2">
         <Flex align={"center"} height={"100%"}>
-          <Flex
-            className={`mr-2 p-1 bg-blue-100 rounded-2xl cursor-pointer ${
-              hoveredAdded ? "bg-rose-100" : ""
-            } ${!hoveredAdded && isAddedToCart ? "bg-green-100" : ""}`}
-            onClick={handleCartClick}
-          >
-            {isAddedToCart ? (
-              <Flex
-                onMouseEnter={() => setHoveredAdded(true)}
-                onMouseLeave={() => setHoveredAdded(false)}
-              >
-                {hoveredAdded ? (
-                  <XIcon color="var(--red-9)" size={"14px"} />
-                ) : (
-                  <CheckIcon color="var(--green-9)" size={"14px"} />
-                )}
-              </Flex>
-            ) : (
-              <PlusIcon color="var(--blue-9)" size={"14px"} />
-            )}
-          </Flex>
           <Flex className="bg-gray-100 p-2 rounded">
             <Image
               src={`/assets/${randomImage}`}
@@ -398,23 +467,45 @@ const ServerItem: React.FC<Props> = ({
       <Table.Cell className="p-0 pr-4" align="right">
         <Flex justify="end" align="center" height="100%">
           {publicKey ? (
-            <Button
-              size={"1"}
-              className={clsx(
-                "w-24",
-                isAddedToCart && hoveredAdded && "bg-[var(--red-9)]",
-                isAddedToCart && !hoveredAdded && "bg-[var(--green-9)]"
+            <>
+              {nft.listed && !nft.listedByUser && (
+                <ServerActionButton
+                  icon={<DollarSignIcon />}
+                  onClick={handlePurchaseNFT}
+                  tooltip="Buy"
+                />
               )}
-              onMouseEnter={() => setHoveredAdded(true)}
-              onMouseLeave={() => setHoveredAdded(false)}
-              onClick={handleCartClick}
-            >
-              {isAddedToCart
-                ? hoveredAdded
-                  ? "Remove"
-                  : "In Cart"
-                : "Add to Cart"}
-            </Button>
+              {wallet && nft.ownedByUser && (
+                <div className="flex">
+                  <ServerActionButton
+                    icon={<ListIcon />}
+                    onClick={handleListNFT}
+                    tooltip="List for sale"
+                    extraStyles="mr-2"
+                  />
+                  <ServerActionButton
+                    icon={<ArrowDownIcon />}
+                    onClick={handleStakeNFT}
+                    tooltip="Stake"
+                  />
+                </div>
+              )}
+              {wallet && nft.listedByUser && (
+                <ServerActionButton
+                  icon={<XIcon />}
+                  onClick={handleDelistNFT}
+                  tooltip="Delist"
+                />
+              )}
+
+              {wallet && nft.stakedByUser && (
+                <ServerActionButton
+                  icon={<ArrowUpIcon />}
+                  onClick={handleUnstakeNFT}
+                  tooltip="Unstake"
+                />
+              )}
+            </>
           ) : (
             <WalletMultiButton style={buttonStyles}>
               Connect Wallet
