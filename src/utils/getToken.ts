@@ -25,7 +25,7 @@ export function getToken(): string {
         alg: 'RS256'
     };
 
-    const privateKey = decryptPrivateKey(process.env.NEXT_PRIVATE_KEY, 'cherry');
+    const privateKey = decryptPrivateKey(process.env.NEXT_PRIVATE_KEY, process.env.NEXT_PRIVATE_KEY_PASSPHRASE);
 
     const headerEncoded = base64UrlEncode(JSON.stringify(header));
     const payloadEncoded = base64UrlEncode(JSON.stringify(payload));
