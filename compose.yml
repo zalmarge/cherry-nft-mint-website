@@ -1,0 +1,12 @@
+services:
+  app:
+    image: node:20
+    working_dir: /srv/app
+    volumes:
+    - type: bind
+      source: ${PWD}
+      target: /srv/app
+    command:
+    - npm
+    - run
+    - dev
