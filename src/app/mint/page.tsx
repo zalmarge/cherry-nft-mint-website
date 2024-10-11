@@ -522,9 +522,9 @@ const Mint = () => {
               }
             }}
             disabled={
-              mintCost === 0 ||
-              !publicKey ||
-              currentTierOptions.available_qty === "0"
+              !(publicKey &&
+                mintCost > 0 &&
+                parseInt(currentTierOptions.available_qty)
             }
           >
             Mint
